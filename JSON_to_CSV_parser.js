@@ -53,5 +53,8 @@ const writeIssuesToCsv = (fileName) => {
   }
 };
 
-parseRepoIssues();
-writeIssuesToCsv(filePathRecentIssues);
+//parseRepoIssues();
+//writeIssuesToCsv(filePathRecentIssues);
+
+ module.exports = {parseRepoIssues, writeIssuesToCsv};
+ 
