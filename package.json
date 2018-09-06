@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "test-engine": "node enginecomm.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/davsjo/core-issue-tracker/issues"
   },
-  "homepage": "https://github.com/davsjo/core-issue-tracker#readme"
+  "homepage": "https://github.com/davsjo/core-issue-tracker#readme",
+  "dependencies": {
+    "package-lock.json": "^1.0.0",
+    "enigma.js": "2.2.0",
+    "ws": "1.1.1"
+  }
 }
