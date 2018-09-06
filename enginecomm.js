@@ -9,14 +9,20 @@ const configuration = require('./config.js');
     console.log('Creating session app on engine.');
     const session = enigma.create({
       schema,
-      url: 'ws://localhost:19076/app/',
+      url: `ws://${configuration.engineUrl}/app/`,
       createSocket: url => new WebSocket(url),
     });
     const qix = await session.open();
     //const app = await qix.createSessionApp();
-    //const app = await qix.createApp(configuration.appName);
-    const app = await qix.openDoc(configuration.appName);
-    
+    let app;
+    // FIXME: Create app if none exists
+    try {
+      app = await qix.openDoc(configuration.appName);
+    } catch {
+      await qix.createApp(configuration.appName);
+      app = await qix.openDoc(configuration.appName);
+    }
+
     console.log('Creating data connection to local files.');
     await app.createConnection({
       qName: 'data',
@@ -28,24 +34,30 @@ const configuration = require('./config.js');
     const script = `Issues:
                       LOAD * FROM [lib://data/repo_recent_issues.csv]
                       (txt, utf8, embedded labels, delimiter is ',');`;
-    await app.setScript(script);
+    res = await app.setScript(script);
+    console.log(res);
+
     res = await app.doReloadEx();
     console.log(res);
     console.log('Creating session.');
-    const issuesCount = 10;
+    const issuesCount = 50;
     const properties = {
       qInfo: { qType: 'hello-data' },
       qHyperCubeDef: {
-        qDimensions: [{ qDef: { qFieldDefs: ['date'] } }],
-        qInitialDataFetch: [{ qHeight: issuesCount, qWidth: 1 }],
+        qDimensions: [{ 
+          qDef: { qFieldDefs: ['repo']},
+          qDef: { qFieldDefs: ['date']},
+        }],
+        qInitialDataFetch: [{ qHeight: issuesCount, qWidth: 50 }],
       },
     };
     const object = await app.createSessionObject(properties);
     const layout = await object.getLayout();
     const issues = layout.qHyperCube.qDataPages[0].qMatrix;
+    
 
-    console.log(`Listing the ${issuesCount} first issues:`);
-    issues.forEach((issue) => { console.log(issue[0].qText); });
+    console.log(`Listing at most the ${issuesCount} first issues:`);
+    issues.forEach((issue) => { console.log(issue[0].qText ); });
 
     await session.close();
     console.log('Session closed.');
