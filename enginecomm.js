@@ -21,14 +21,13 @@ const sendDataToEngine = async () => {
     } catch (err) {
       await qix.createApp(configuration.appName);
       app = await qix.openDoc(configuration.appName);
+      console.log('Creating data connection to local files.');
+      await app.createConnection({
+        qName: 'data',
+        qConnectionString: '/data/',
+        qType: 'folder',
+      });
     }
-
-    console.log('Creating data connection to local files.');
-    await app.createConnection({
-      qName: 'data',
-      qConnectionString: '/data/',
-      qType: 'folder',
-    });
 
     console.log('Running reload script.');
     const script = `Issues:
