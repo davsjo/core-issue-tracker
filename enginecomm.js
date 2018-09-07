@@ -37,6 +37,7 @@ const sendDataToEngine = async () => {
     let res = await app.setScript(script);
     res = await app.doReload();
     console.log(`Reload engine:  ${res ? 'success' : 'failed'}`);
+    await app.doSave();
     await session.close();
   } catch (err) {
     console.log('Whoops! An error occurred.', err);
