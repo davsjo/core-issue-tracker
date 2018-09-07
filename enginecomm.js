@@ -60,9 +60,11 @@ const printIssueData = async () => {
       qHyperCubeDef: {
         qDimensions: [{
           qDef: { qFieldDefs: ['repo'] },
-          // qDef: { qFieldDefs: ['date'] },
-        },{ 
-          qDef: { qFieldDefs: ['date'] }}],
+        }, {
+          qDef: { qFieldDefs: ['date'] },
+        }, {
+          qDef: { qFieldDefs: ['has_projects'] }
+        }],
         qInitialDataFetch: [{ qHeight: issuesCount, qWidth: 50 }],
       },
     };
@@ -71,7 +73,7 @@ const printIssueData = async () => {
     const issues = layout.qHyperCube.qDataPages[0].qMatrix;
 
     console.log(`Listing the ${issuesCount} first issues:`);
-    issues.forEach((issue) => { console.log(issue[0].qText,issue[1].qText); });
+    issues.forEach((issue) => { console.log(issue[0].qText, issue[1].qText, issue[2].qText); });
 
     await session.close();
     console.log('Session closed.');

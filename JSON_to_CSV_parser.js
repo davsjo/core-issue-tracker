@@ -10,6 +10,7 @@ let issues = [];
 
 const parseRepoIssues = () => {
   objects.forEach((element) => {
+    //console.log(element.assignee);
     const repo = element.repository.name;
     if (!Object.prototype.hasOwnProperty.call(element, 'pull_request')) {
       if (!Object.prototype.hasOwnProperty.call(element, '')) {
@@ -19,7 +20,9 @@ const parseRepoIssues = () => {
           title: element.title,
           submitter: element.user.login,
           usertype: element.author_association,
-          assignee: element.assignee,
+          assignee: element.assignee ? element.assignee.login : null,
+          has_projects: element.has_projects,
+          //language: element.language,
         });
       }
     }
