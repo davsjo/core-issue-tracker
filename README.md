@@ -3,8 +3,7 @@
 Small service which gathers github public data from our open source repos to simplify our issue tracking within the team. I.e. make sure we don't miss out on important feedback. Backend is based on javascript service using the Qlik Associative engine powering the backend and acting as a link to the frontend implementation found in: 
 https://github.com/JohanBjerning/issue-dashboard-front
 
-!!! NOTE 
-    The project is mostly done in hackaton for knowledge gaining purposes. Beware of ugly code!
+*The project is mostly done in hackaton for knowledge gaining purposes. Beware of ugly code!*
 
 In the future we should probably go for the Github v4 API since the v3 used in the project will be deprecated soon and sends a lot of unnecessary information. 
 
@@ -22,10 +21,20 @@ ACCEPT_EULA=yes docker-compose up -d
 
 You need a personal Github token in order to query the github API [authenticate to the API over Basic Authentication](https://developer.github.com/v3/auth/#basic-authentication).
 
-Create a personal token with at least public_repo scope
+Create a [personal token](https://github.com/settings/tokens) with at least public_repo scope
 
 ## Create personalized service configuration
 
-# Copy the (config-example.js) file and rename to config.js.
-# Copy your newly created Github token into the githubToken 
+1. Copy the (config-example.js) file and rename to config.js.
+2. Copy your newly created Github token into the githubToken 
+
+## Install all necessary packages 
+
+`npm install`
+
+# Execution
+
+`npm run start`
+
+
 
