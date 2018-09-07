@@ -32,7 +32,20 @@ const sendDataToEngine = async () => {
     console.log('Running reload script.');
     const script = `Issues:
                         LOAD * FROM [lib://data/repo_recent_issues.csv]
-                        (txt, utf8, embedded labels, delimiter is ',');`;
+                        (txt, utf8, embedded labels, delimiter is ',');
+                        outer join
+                        LOAD * INLINE [
+                          repo, ignore,
+                          picasso.js, yes
+                          server-side-extension, yes
+                          http-metrics-middleware, yes
+                          leonardo-ui, yes
+                          open-source, yes
+                          sse-r-plugin, yes
+                          qlik-sense-visualization-extension-testing, yes
+                          nprinting-adsync, yes
+                        ];                   
+                        `;
     let res = await app.setScript(script);
     res = await app.doReload();
     console.log(`Reload engine:  ${res ? 'success' : 'failed'}`);
@@ -63,7 +76,9 @@ const printIssueData = async () => {
         }, {
           qDef: { qFieldDefs: ['date'] },
         }, {
-          qDef: { qFieldDefs: ['has_projects'] }
+          qDef: { qFieldDefs: ['ignore'] },
+        }, {
+          qDef: { qFieldDefs: ['has_projects'] },
         }],
         qInitialDataFetch: [{ qHeight: issuesCount, qWidth: 50 }],
       },
