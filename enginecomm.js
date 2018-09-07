@@ -4,7 +4,7 @@ const enigma = require('enigma.js');
 const schema = require('enigma.js/schemas/3.2.json');
 const configuration = require('./config.js');
 
-(async () => {
+const sendDataToEngine = async () => {
   try {
     console.log('Creating session app on engine.');
     const session = enigma.create({
@@ -13,12 +13,12 @@ const configuration = require('./config.js');
       createSocket: url => new WebSocket(url),
     });
     const qix = await session.open();
-    //const app = await qix.createSessionApp();
+    // const app = await qix.createSessionApp();
     let app;
     // FIXME: Create app if none exists
     try {
       app = await qix.openDoc(configuration.appName);
-    } catch {
+    } catch (err) {
       await qix.createApp(configuration.appName);
       app = await qix.openDoc(configuration.appName);
     }
@@ -32,9 +32,9 @@ const configuration = require('./config.js');
 
     console.log('Running reload script.');
     const script = `Issues:
-                      LOAD * FROM [lib://data/repo_recent_issues.csv]
-                      (txt, utf8, embedded labels, delimiter is ',');`;
-    res = await app.setScript(script);
+                        LOAD * FROM [lib://data/repo_recent_issues.csv]
+                        (txt, utf8, embedded labels, delimiter is ',');`;
+    let res = await app.setScript(script);
     console.log(res);
 
     res = await app.doReloadEx();
@@ -44,9 +44,9 @@ const configuration = require('./config.js');
     const properties = {
       qInfo: { qType: 'hello-data' },
       qHyperCubeDef: {
-        qDimensions: [{ 
-          qDef: { qFieldDefs: ['repo']},
-          qDef: { qFieldDefs: ['date']},
+        qDimensions: [{
+          qDef: { qFieldDefs: ['repo'] },
+          // qDef: { qFieldDefs: ['date'] },
         }],
         qInitialDataFetch: [{ qHeight: issuesCount, qWidth: 50 }],
       },
@@ -54,15 +54,16 @@ const configuration = require('./config.js');
     const object = await app.createSessionObject(properties);
     const layout = await object.getLayout();
     const issues = layout.qHyperCube.qDataPages[0].qMatrix;
-    
+
 
     console.log(`Listing at most the ${issuesCount} first issues:`);
-    issues.forEach((issue) => { console.log(issue[0].qText ); });
+    issues.forEach((issue) => { console.log(issue[0].qText); });
 
     await session.close();
     console.log('Session closed.');
   } catch (err) {
     console.log('Whoops! An error occurred.', err);
-    process.exit(1);
   }
-})();
+};
+
+module.exports = sendDataToEngine;

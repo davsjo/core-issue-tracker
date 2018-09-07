@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test-engine": "node enginecomm.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +26,10 @@
     "package-lock.json": "^1.0.0",
     "request": "^2.88.0",
     "ws": "1.1.1"
+  },
+  "devDependencies": {
+    "eslint": "4.10.0",
+    "eslint-config-airbnb-base": "12.1.0",
+    "eslint-plugin-import": "2.8.0"
   }
 }
