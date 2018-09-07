@@ -35,10 +35,24 @@ const sendDataToEngine = async () => {
                         LOAD * FROM [lib://data/repo_recent_issues.csv]
                         (txt, utf8, embedded labels, delimiter is ',');`;
     let res = await app.setScript(script);
-    console.log(res);
+    res = await app.doReload();
+    console.log(`Reload engine:  ${res ? 'success' : 'failed'}`);
+    await session.close();
+  } catch (err) {
+    console.log('Whoops! An error occurred.', err);
+  }
+};
 
-    res = await app.doReloadEx();
-    console.log(res);
+const printIssueData = async () => {
+  try {
+    const session = enigma.create({
+      schema,
+      url: `ws://${configuration.engineUrl}/app/`,
+      createSocket: url => new WebSocket(url),
+    });
+    const qix = await session.open();
+    const app = await qix.openDoc(configuration.appName);
+
     console.log('Creating session.');
     const issuesCount = 50;
     const properties = {
@@ -55,8 +69,7 @@ const sendDataToEngine = async () => {
     const layout = await object.getLayout();
     const issues = layout.qHyperCube.qDataPages[0].qMatrix;
 
-
-    console.log(`Listing at most the ${issuesCount} first issues:`);
+    console.log(`Listing the ${issuesCount} first issues:`);
     issues.forEach((issue) => { console.log(issue[0].qText); });
 
     await session.close();
@@ -66,4 +79,4 @@ const sendDataToEngine = async () => {
   }
 };
 
-module.exports = sendDataToEngine;
+module.exports = { sendDataToEngine, printIssueData };

@@ -3,7 +3,7 @@ const request = require('request');
 const fs = require('fs');
 const configuration = require('./config.js');
 const JSON2CSV = require('./JSON_to_CSV_parser.js');
-// const enginecomm = require('./enginecomm.js');
+const enginecomm = require('./enginecomm.js');
 
 const options = {
   url: 'https://api.github.com/orgs/qlik-oss/issues?filter=all&state=open&per_page=500',
@@ -29,6 +29,7 @@ const fetchGithubData = () => {
         JSON2CSV.writeIssuesToCsv(configuration.filePathRecentIssues);
 
         // Push new csv file to engine
+        enginecomm.sendDataToEngine();
 
         // Do reload
 
