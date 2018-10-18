@@ -5,10 +5,10 @@
 const fs = require('fs');
 const json2csv = require('json2csv').parse;
 
-const objects = JSON.parse(fs.readFileSync('./data/repo_info.json', 'utf8'));
 let issues = [];
 
-const parseRepoIssues = () => {
+const parseRepoIssues = (json) => {
+  const objects = JSON.parse(json);
   objects.forEach((element) => {
     const repo = element.repository.name;
     if (!Object.prototype.hasOwnProperty.call(element, 'pull_request')) {

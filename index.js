@@ -1,6 +1,5 @@
 /* eslint no-console:0 */
 const request = require('request');
-const fs = require('fs');
 const configuration = require('./config.js');
 const JSON2CSV = require('./JSON_to_CSV_parser.js');
 const enginecomm = require('./enginecomm.js');
@@ -24,8 +23,7 @@ const fetchGithubData = () => {
         const info = JSON.parse(body);
 
         // Create json files and parse to CSV
-        fs.writeFileSync('./data/repo_info.json', JSON.stringify(info), 'utf8');
-        JSON2CSV.parseRepoIssues();
+        JSON2CSV.parseRepoIssues(JSON.stringify(info));
         JSON2CSV.writeIssuesToCsv(configuration.filePathRecentIssues);
 
         // Push new csv file to engine
@@ -38,7 +36,7 @@ const fetchGithubData = () => {
         console.log('No new issues');
       }
     } else {
-      console.log(JSON.stringify(error));
+      console.log(`Error: ${JSON.stringify(error)}`);
     }
   });
 };
